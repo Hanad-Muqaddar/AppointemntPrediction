@@ -1,15 +1,25 @@
 from typing import Dict, List
-
+import datetime
 import pandas as pd
 
 
+# def map_column_values(column_name, value, encoding_dicts):
+#     for key in encoding_dicts:
+#         if column_name in encoding_dicts[key].keys():
+#             mapping_dict = key[column_name]
+#             # print(mapping_dict)
+#             return mapping_dict[value]
+#     return 0
+
 def map_column_values(column_name, value, encoding_dicts):
-    for key in encoding_dicts:
-        if column_name in encoding_dicts[key].keys():
-            mapping_dict = key[column_name]
-            # print(mapping_dict)
-            return mapping_dict[value]
-    return 0
+    try:
+        for j in encoding_dicts:
+            if column_name in j.keys():
+                mapping_dict = j[column_name]
+                lower_mapping_dict = {k.lower(): v for k, v in mapping_dict.items()}
+                return lower_mapping_dict[value.lower()]
+    except Exception as e:
+        return sum(lower_mapping_dict.values()) / len(lower_mapping_dict)
 
 
 def apply_mappings(df: pd.DataFrame, columns_to_encode: List[str], encoding_dict: Dict):
@@ -34,7 +44,8 @@ def preprocess_data(df: pd.DataFrame, encoder: Dict):
     # df["missed"] = df["missed"].str.lower().replace({"yes": 1, "no": 0})
     df["appointment_start_time"] = pd.to_datetime(df["appointment_start_time"], errors="coerce")
     df["date_of_birth"] = pd.to_datetime(df["date_of_birth"], errors="coerce")
-    df["age"] = df["appointment_start_time"].dt.year - df["date_of_birth"].dt.year
+    current_date = datetime.datetime.now()
+    df["age"] = current_date.year - df["date_of_birth"].dt.year
     df["appointment_start_time_day"] = df["appointment_start_time"].dt.day
     df["appointment_start_time_week"] = df["appointment_start_time"].dt.month
     df["appointment_start_time_year"] = df["appointment_start_time"].dt.year
