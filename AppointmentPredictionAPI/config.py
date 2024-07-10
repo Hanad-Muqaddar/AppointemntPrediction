@@ -22,7 +22,7 @@ class BaseConfig(BaseSettings):
 class Config(BaseConfig):
 
     classes: ClassVar = Classes
-    model: str = "artifact/first_model.joblib"
+    model: str = "artifact/xgb_classifier_model.joblib"
     encoder: str = "artifact/Encodings.json"
     classes_dict: dict = {0: classes.CANCELLED.value, 1: classes.Not_CANCELLED.value}
 
